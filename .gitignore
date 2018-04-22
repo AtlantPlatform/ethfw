@@ -1,0 +1,6 @@
+.DS_Store
+var/chain/
+test.db
+ethfw.db
+bin/
+.idea/
