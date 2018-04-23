@@ -32,20 +32,17 @@ type Client interface {
 	bind.ContractCaller
 	bind.ContractTransactor
 	bind.ContractFilterer
+
 	BalanceAt(ctx context.Context, account common.Address, blockNumber *big.Int) (*big.Int, error)
 	TransactOpts(ctx context.Context, account common.Address, password string) (*bind.TransactOpts, error)
 	BindContract(contract *sol.Contract) (*BoundContract, error)
 	PersonalAccounts(ctx context.Context) ([]common.Address, error)
 	Transaction(ctx context.Context, id common.Hash) (*types.Transaction, bool, error)
-	Close()
 	TransactionReceipt(ctx context.Context, txHash common.Hash) (*types.Receipt, error)
+	Close()
 }
 
-func NewClient(cli *rpc.Client, opts ...clientOpt) (Client, error) {
-	if cli == nil {
-		err := errors.New("ethfw: no RPC client provided")
-		return nil, err
-	}
+func NewClient(cli *rpc.Client, opts ...clientOpt) Client {
 	c := &client{
 		cli:        cli,
 		eth:        ethclient.NewClient(cli),
@@ -64,7 +61,7 @@ func NewClient(cli *rpc.Client, opts ...clientOpt) (Client, error) {
 			o(c.opt)
 		}
 	}
-	return c, nil
+	return c
 }
 
 type Block struct {

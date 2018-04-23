@@ -62,12 +62,7 @@ func setUpClient(socket string) {
 	closer.Bind(func() {
 		rpcCli.Close()
 	})
-	fwCli, err := NewClient(rpcCli)
-
-	if err != nil {
-		log.Fatalf("failed to init fw client: %v", err)
-	}
-	cli = fwCli
+	cli = NewClient(rpcCli)
 }
 
 func shutDownClient() {
