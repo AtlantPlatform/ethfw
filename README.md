@@ -6,4 +6,6 @@ A framework for simplifying development of Ethereum oriented projects using Go p
 
 ### License
 
-This software licensed under GNU General Public License version 3, see [LICENSE](/LICENSE).
+Copyright 2017, 2018 Tensigma Ltd. All rights reserved.
+Use of this source code is governed by Microsoft Reference Source
+License (MS-RSL) that can be found in the [LICENSE](/LICENSE) file.
