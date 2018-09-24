@@ -20,7 +20,7 @@ import (
 )
 
 type KeyCache interface {
-	SetPath(account common.Address, path string)
+	SetPath(account common.Address, path string) bool
 	UnsetPath(account common.Address, path string)
 	PrivateKey(account common.Address, password string) (key *ecdsa.PrivateKey, ok bool)
 	UnsetKey(account common.Address, password string)
@@ -45,10 +45,14 @@ type keyCache struct {
 	guard    *Uniqify
 }
 
-func (k *keyCache) SetPath(account common.Address, path string) {
+// SetPath sets the wallet path for a given account. Returns true if the new path
+// has been added or was changed.
+func (k *keyCache) SetPath(account common.Address, path string) bool {
 	k.pathsMux.Lock()
+	prevPath, existing := k.paths[account]
 	k.paths[account] = path
 	k.pathsMux.Unlock()
+	return !existing || prevPath != path
 }
 
 func (k *keyCache) UnsetPath(account common.Address, path string) {
