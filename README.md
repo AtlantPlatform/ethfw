@@ -2,8 +2,6 @@
 
 A framework for simplifying development of Ethereum oriented projects using Go programming language.
 
-**WORK IN PROGRESS**
-
 ### License
 
 Copyright 2017, 2018 Tensigma Ltd. All rights reserved.

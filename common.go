@@ -6,7 +6,6 @@ package ethfw
 
 import (
 	"bytes"
-	"context"
 	"fmt"
 
 	"github.com/ethereum/go-ethereum/accounts/abi"
@@ -16,25 +15,6 @@ import (
 
 	"github.com/AtlantPlatform/ethfw/sol"
 )
-
-// ContextWithCancelChan returns a cancellable context that cancels
-// when cancelC chan is closed or when a closeC chan signal arrives.
-func ContextWithCloseChan(ctx context.Context, closeC <-chan struct{}) (context.Context, func()) {
-	cancelC := make(chan struct{})
-	closeFn := func() {
-		close(cancelC)
-	}
-	ctx, cancelFn := context.WithCancel(ctx)
-	go func(cancelFn func()) {
-		select {
-		case <-closeC:
-			cancelFn()
-		case <-cancelC:
-			cancelFn()
-		}
-	}(cancelFn)
-	return ctx, closeFn
-}
 
 func ContractDeployBin(c *sol.Contract, params ...interface{}) ([]byte, error) {
 	parsedABI, err := abi.JSON(bytes.NewReader(c.ABI))
