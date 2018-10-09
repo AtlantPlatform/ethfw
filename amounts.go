@@ -17,6 +17,11 @@ func (w *Wei) String() string {
 	return (*decimal.Decimal)(w).String()
 }
 
+func (w *Wei) StringGwei() string {
+	d := (*decimal.Decimal)(w).Div(decimal.NewFromFloat(1e9))
+	return d.String()
+}
+
 func (w *Wei) Bytes() []byte {
 	return []byte((*decimal.Decimal)(w).String())
 }
@@ -77,6 +82,18 @@ func Gwei(gwei uint64) *Wei {
 	w := big.NewInt(0).SetUint64(gwei)
 	m := big.NewInt(0).SetUint64(1e9)
 	return BigWei(w.Mul(w, m))
+}
+
+func (w *Wei) Mul(m int64) *Wei {
+	d := (*decimal.Decimal)(w)
+	result := d.Mul(decimal.NewFromBigInt(big.NewInt(m), 0))
+	return (*Wei)(&result)
+}
+
+func (w *Wei) Div(m int64) *Wei {
+	d := (*decimal.Decimal)(w)
+	result := d.Div(decimal.NewFromBigInt(big.NewInt(m), 0))
+	return (*Wei)(&result)
 }
 
 // ToWei converts ether or tokens amount into Wei amount.
