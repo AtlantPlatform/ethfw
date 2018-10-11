@@ -13,17 +13,17 @@ import (
 
 type Wei decimal.Decimal
 
-func (w *Wei) String() string {
-	return (*decimal.Decimal)(w).String()
+func (w Wei) String() string {
+	return (decimal.Decimal)(w).String()
 }
 
-func (w *Wei) StringGwei() string {
-	d := (*decimal.Decimal)(w).Div(decimal.NewFromFloat(1e9))
+func (w Wei) StringGwei() string {
+	d := (decimal.Decimal)(w).Div(decimal.NewFromFloat(1e9))
 	return d.String()
 }
 
-func (w *Wei) Bytes() []byte {
-	return []byte((*decimal.Decimal)(w).String())
+func (w Wei) Bytes() []byte {
+	return []byte((decimal.Decimal)(w).String())
 }
 
 func (w *Wei) Scan(v interface{}) error {
