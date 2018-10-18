@@ -10,6 +10,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"os"
 	"os/exec"
 	"path/filepath"
 	"strings"
@@ -71,10 +72,10 @@ type solcOutput struct {
 
 func (s *solCompiler) Compile(prefix, path string) (map[string]*Contract, error) {
 	cmd := exec.Cmd{
-		Path: s.solcPath,
-		Args: []string{s.solcPath, "--combined-json", "bin,abi", filepath.Join(prefix, path)},
-		Dir:  prefix,
-		// Stderr: os.Stderr,
+		Path:   s.solcPath,
+		Args:   []string{s.solcPath, "--combined-json", "bin,abi", filepath.Join(prefix, path)},
+		Dir:    prefix,
+		Stderr: os.Stderr,
 	}
 	out, err := cmd.Output()
 	if err != nil {

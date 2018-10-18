@@ -65,6 +65,10 @@ func (contract *BoundContract) Address() common.Address {
 	return contract.address
 }
 
+func (contract *BoundContract) SetAddress(address common.Address) {
+	contract.address = address
+}
+
 func (contract *BoundContract) Source() *sol.Contract {
 	return contract.src
 }
@@ -76,29 +80,29 @@ func (contract *BoundContract) ABI() abi.ABI {
 // DeployContract deploys a contract onto the Ethereum blockchain and binds the
 // deployment address with a Go wrapper.
 func (c *BoundContract) DeployContract(opts *bind.TransactOpts,
-	params ...interface{}) (common.Address, *types.Transaction, *BoundContract, error) {
+	params ...interface{}) (common.Address, *types.Transaction, error) {
 
 	if c.transactFn == nil {
 		addr, tx, bound, err := bind.DeployContract(opts, c.abi, []byte(c.src.Bin), c.client, params...)
 		if err != nil {
-			return addr, tx, nil, err
+			return addr, tx, err
 		}
 		c.BoundContract = bound
-		return addr, tx, c, nil
+		return addr, tx, nil
 	}
 
 	c.BoundContract = bind.NewBoundContract(common.Address{}, c.abi, c.client, c.client, c.client)
 	input, err := c.abi.Pack("", params...)
 	if err != nil {
-		return common.Address{}, nil, nil, err
+		return common.Address{}, nil, err
 	}
 	tx, err := c.transactFn(opts, nil, append([]byte(c.src.Bin), input...))
 	if err != nil {
-		return common.Address{}, nil, nil, err
+		return common.Address{}, nil, err
 	}
 	c.address = crypto.CreateAddress(opts.From, tx.Nonce())
 	c.BoundContract = bind.NewBoundContract(c.address, c.abi, c.client, c.client, c.client)
-	return c.address, tx, c, nil
+	return c.address, tx, nil
 }
 
 // Transact invokes the (paid) contract method with params as input values.
