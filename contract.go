@@ -111,7 +111,7 @@ func (c *BoundContract) DeployContract(opts *bind.TransactOpts,
 func (c *BoundContract) Transact(opts *bind.TransactOpts, method string, params ...interface{}) (*types.Transaction, error) {
 
 	if c.transactFn == nil {
-		return c.BoundContract.Transact(opts, method, params)
+		return c.BoundContract.Transact(opts, method, params...)
 	}
 
 	input, err := c.abi.Pack(method, params...)
