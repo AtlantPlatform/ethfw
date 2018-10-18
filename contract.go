@@ -67,6 +67,8 @@ func (contract *BoundContract) Address() common.Address {
 
 func (contract *BoundContract) SetAddress(address common.Address) {
 	contract.address = address
+	contract.BoundContract = bind.NewBoundContract(
+		address, contract.abi, contract.client, contract.client, contract.client)
 }
 
 func (contract *BoundContract) Source() *sol.Contract {
@@ -83,7 +85,7 @@ func (c *BoundContract) DeployContract(opts *bind.TransactOpts,
 	params ...interface{}) (common.Address, *types.Transaction, error) {
 
 	if c.transactFn == nil {
-		addr, tx, bound, err := bind.DeployContract(opts, c.abi, []byte(c.src.Bin), c.client, params...)
+		addr, tx, bound, err := bind.DeployContract(opts, c.abi, common.FromHex(c.src.Bin), c.client, params...)
 		if err != nil {
 			return addr, tx, err
 		}
@@ -96,7 +98,7 @@ func (c *BoundContract) DeployContract(opts *bind.TransactOpts,
 	if err != nil {
 		return common.Address{}, nil, err
 	}
-	tx, err := c.transactFn(opts, nil, append([]byte(c.src.Bin), input...))
+	tx, err := c.transactFn(opts, nil, append(common.FromHex(c.src.Bin), input...))
 	if err != nil {
 		return common.Address{}, nil, err
 	}
